@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import ga.framework.model.NoSolutionException;
+import ga.framework.operators.SurvivalException;
 import ga.framework.model.Problem;
 import ga.framework.model.Solution;
 import ga.framework.operators.EvolutionException;
@@ -49,6 +50,11 @@ public class GeneticAlgorithm {
                 for (Solution solution : population) {
                     children.add(operator.evolve(solution));
                 }
+                fitnessEvaluator.evaluate(children);
+                population.addAll(children);
+
+                population = survivalOperator.selectPopulation(population, populationSize);
+
             }
 
             return population;
@@ -57,7 +63,10 @@ public class GeneticAlgorithm {
             System.err.println("Fehler bei Evolution: " + e.getMessage());
             return null;
         } catch (NoSolutionException e) {
-            System.err.println("Fehler Startpopulation " + e.getMessage());
+            System.err.println("Fehler bei Startpopulation: " + e.getMessage());
+            return null;
+        } catch (SurvivalException e) {
+            System.err.println("Fehler bei Selektion: " + e.getMessage());
             return null;
         }
     }
