@@ -36,6 +36,7 @@ public class TopKSurvival implements SurvivalOperator {
             if (j >= k) {
                 newPopulation.add(candidates.get(j));
             }
+        
         }
 
         return newPopulation;
