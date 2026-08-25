@@ -5,9 +5,12 @@ import ga.framework.model.*;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class KnapsackProblem {
+public class KnapsackProblem implements Problem {
 
     private int capacity;
+
+
+
     private ArrayList<KnapsackItem> items;
 
     public KnapsackProblem(int capacity, ArrayList<KnapsackItem> items) {
@@ -24,9 +27,19 @@ public class KnapsackProblem {
         this.capacity = capacity;
     }
 
-    public KnapsackSolution createNewSolution() throws Exception {
+    public ArrayList<KnapsackItem> getItems() {
+        return items;
+    }
+
+    public void setItems(ArrayList<KnapsackItem> items) {
+        this.items = items;
+    }
+
+    @Override
+    public KnapsackSolution createNewSolution() throws NoSolutionException {
         KnapsackSolution solution = new KnapsackSolution();
-        ArrayList<KnapsackItem> remainingItems = items;
+        ArrayList<KnapsackItem> remainingItems = new ArrayList<>();
+        remainingItems.addAll(this.items);
 
         while (!remainingItems.isEmpty()) {
             int randomIndex = ThreadLocalRandom.current().nextInt(0, remainingItems.size());

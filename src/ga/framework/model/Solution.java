@@ -14,7 +14,10 @@ public abstract class Solution {
 		this.fitness = toCopy.getFitness();
 	}
 
-	public double getFitness() {
+    public Solution() {
+    }
+
+    public double getFitness() {
 		return fitness;
 	}
 

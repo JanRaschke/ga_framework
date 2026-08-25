@@ -1,10 +1,13 @@
 package ga.problems.knapsack;
 
+import ga.framework.model.Problem;
+import ga.framework.model.Solution;
+
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
-public class KnapsackSolution  {
+public class KnapsackSolution extends Solution {
 
     private ArrayList<KnapsackItem> contents;
     private int totalValue;
@@ -17,7 +20,8 @@ public class KnapsackSolution  {
     }
 
     public KnapsackSolution(KnapsackSolution other) {
-        this.contents = other.contents;
+        super(other);
+        this.contents = new ArrayList<>(other.contents);
         this.totalValue = other.totalValue;
         this.totalWeight = other.totalWeight;
     }
@@ -50,11 +54,13 @@ public class KnapsackSolution  {
         this.contents.add(item);
         this.totalValue += item.getValue();
         this.totalWeight += item.getWeight();
+        this.setFitness(this.totalValue);
     }
 
     public void removeItemFromContents(KnapsackItem item) {
         this.contents.remove(item);
         this.totalValue -= item.getValue();
         this.totalWeight -= item.getWeight();
+        this.setFitness(this.totalValue);
     }
 }
