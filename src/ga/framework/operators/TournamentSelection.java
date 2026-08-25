@@ -18,7 +18,7 @@ public class TournamentSelection implements SelectionOperator {
         Solution can1 = candidates.get(random.nextInt(candidates.size()));
         Solution can2 = candidates.get(random.nextInt(candidates.size()));
 
-        if (can1.getFitness() > can2.getFitness()) {
+        if (can1.getFitness() >= can2.getFitness()) {
             return can1;
         } else {
             return can2;
