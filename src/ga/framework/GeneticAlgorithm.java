@@ -2,17 +2,18 @@ package ga.framework;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
+
+import ga.framework.model.NoSolutionException;
+import ga.framework.operators.SurvivalException;
 import ga.framework.model.Problem;
+import ga.framework.model.Solution;
+import ga.framework.operators.EvolutionException;
 import ga.framework.operators.EvolutionaryOperator;
 import ga.framework.operators.FitnessEvaluator;
 import ga.framework.operators.SurvivalOperator;
 
-/**
- * Grundgeruest fuer den Genetischen Algorithmus (Aufgabe 1.1)
- */
 public class GeneticAlgorithm {
-    // Hier erarbeiten wir gleich gemeinsam die Attribute, Konstruktoren und
-    // Methoden!'
 
     private Problem problem;
     private int populationSize;
@@ -31,4 +32,42 @@ public class GeneticAlgorithm {
         this.maxIterations = maxIterations;
     }
 
+    public List<Solution> runOptimization() {
+        Random random = new Random();
+        try {
+            List<Solution> population = new ArrayList<>();
+            for (int i = 0; i < populationSize; i++) {
+                population.add(problem.createNewSolution());
+            }
+
+            fitnessEvaluator.evaluate(population);
+
+            for (int iteration = 0; iteration < maxIterations; iteration++) {
+                int randomIndex = random.nextInt(evolutionaryOperators.size());
+                EvolutionaryOperator operator = evolutionaryOperators.get(randomIndex);
+
+                List<Solution> children = new ArrayList<>();
+                for (Solution solution : population) {
+                    children.add(operator.evolve(solution));
+                }
+                fitnessEvaluator.evaluate(children);
+                population.addAll(children);
+
+                population = survivalOperator.selectPopulation(population, populationSize);
+
+            }
+
+            return population;
+
+        } catch (EvolutionException e) {
+            System.err.println("Fehler bei Evolution: " + e.getMessage());
+            return null;
+        } catch (NoSolutionException e) {
+            System.err.println("Fehler bei Startpopulation: " + e.getMessage());
+            return null;
+        } catch (SurvivalException e) {
+            System.err.println("Fehler bei Selektion: " + e.getMessage());
+            return null;
+        }
+    }
 }
