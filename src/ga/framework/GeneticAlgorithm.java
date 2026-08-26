@@ -11,6 +11,7 @@ import ga.framework.model.Solution;
 import ga.framework.operators.EvolutionException;
 import ga.framework.operators.EvolutionaryOperator;
 import ga.framework.operators.FitnessEvaluator;
+import ga.framework.operators.SelectionOperator;
 import ga.framework.operators.SurvivalOperator;
 
 public class GeneticAlgorithm {
@@ -22,14 +23,18 @@ public class GeneticAlgorithm {
     private SurvivalOperator survivalOperator;
     private int maxIterations;
 
+    private SelectionOperator selectionOperator;
+
     public GeneticAlgorithm(Problem problem, int populationSize, List<EvolutionaryOperator> evolutionaryOperators,
-            FitnessEvaluator fitnessEvaluator, SurvivalOperator survivalOperator, int maxIterations) {
+            FitnessEvaluator fitnessEvaluator, SurvivalOperator survivalOperator, int maxIterations,
+            SelectionOperator selectionOperator) {
         this.problem = problem;
         this.populationSize = populationSize;
         this.evolutionaryOperators = evolutionaryOperators;
         this.fitnessEvaluator = fitnessEvaluator;
         this.survivalOperator = survivalOperator;
         this.maxIterations = maxIterations;
+        this.selectionOperator = selectionOperator;
     }
 
     public List<Solution> runOptimization() {
@@ -43,12 +48,17 @@ public class GeneticAlgorithm {
             fitnessEvaluator.evaluate(population);
 
             for (int iteration = 0; iteration < maxIterations; iteration++) {
-                int randomIndex = random.nextInt(evolutionaryOperators.size());
-                EvolutionaryOperator operator = evolutionaryOperators.get(randomIndex);
+                // int randomIndex = random.nextInt(evolutionaryOperators.size());
+                // EvolutionaryOperator operator = evolutionaryOperators.get(randomIndex);
 
                 List<Solution> children = new ArrayList<>();
-                for (Solution solution : population) {
-                    children.add(operator.evolve(solution));
+                for (int i = 0; i < populationSize; i++) {
+                    // children.add(operator.evolve(solution));
+                    Solution parent = selectionOperator.selectParent(population);
+                    int randomIndex = random.nextInt(evolutionaryOperators.size());
+                    EvolutionaryOperator operator = evolutionaryOperators.get(randomIndex);
+                    Solution child = operator.evolve(parent);
+                    children.add(child);
                 }
                 fitnessEvaluator.evaluate(children);
                 population.addAll(children);
