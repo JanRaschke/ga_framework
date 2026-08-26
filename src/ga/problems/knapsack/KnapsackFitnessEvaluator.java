@@ -29,7 +29,7 @@ public class KnapsackFitnessEvaluator {
                 .mapToInt(KnapsackSolution::getTotalValue)
                 .sum();
 
-        System.out.println("Max-Fitness: " + maxFitness + "\n Avg-Fitness: " + avgFitness + "\n Total-Fitness: " + totalPopulationFitness);
+        System.out.println("Max-Fitness: " + maxFitness + "\nAvg-Fitness: " + avgFitness + "\nTotal-Fitness: " + totalPopulationFitness);
         System.out.println("Best Solution: " + bestSolution);
     }
 }
