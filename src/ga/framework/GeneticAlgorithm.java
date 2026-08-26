@@ -42,6 +42,7 @@ public class GeneticAlgorithm {
         try {
             List<Solution> population = new ArrayList<>();
             for (int i = 0; i < populationSize; i++) {
+                // Startpopulation erstellen
                 population.add(problem.createNewSolution());
             }
 
@@ -51,13 +52,15 @@ public class GeneticAlgorithm {
                 // int randomIndex = random.nextInt(evolutionaryOperators.size());
                 // EvolutionaryOperator operator = evolutionaryOperators.get(randomIndex);
 
+                // über Pop iterieren
                 List<Solution> children = new ArrayList<>();
+                // Genao so viele Kinder erzeugen wie Popgröße
                 for (int i = 0; i < populationSize; i++) {
                     // children.add(operator.evolve(solution));
-                    Solution parent = selectionOperator.selectParent(population);
-                    int randomIndex = random.nextInt(evolutionaryOperators.size());
+                    Solution parent = selectionOperator.selectParent(population);// Selection Methode hier Tournament
+                    int randomIndex = random.nextInt(evolutionaryOperators.size());// Random Mutation
                     EvolutionaryOperator operator = evolutionaryOperators.get(randomIndex);
-                    Solution child = operator.evolve(parent);
+                    Solution child = operator.evolve(parent);// Muation + Elternteil = Kind
                     children.add(child);
                 }
                 fitnessEvaluator.evaluate(children);
